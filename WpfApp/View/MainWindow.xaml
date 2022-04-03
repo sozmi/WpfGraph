@@ -1,0 +1,244 @@
+﻿<Window x:Class="WpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:WpfApp.ViewModels" 
+        mc:Ignorable="d"
+        Name="main"
+        Title="MainWindow"
+        
+        WindowState="Maximized"
+        MinWidth="600"
+        MinHeight="500" 
+        FontSize="16" 
+        FontFamily="Bahnschrift Condensed">
+    <!--Привязка данных-->
+    <Window.DataContext>
+        <viewmodels:ViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary Source="/View/Resource/DictionaryElem.xaml"/>
+    </Window.Resources>
+    <!--Основной контейнер-->
+    <DockPanel>
+        <!--Левое меню-->
+        <StackPanel>
+            <!--Панель свойств графа-->
+            <GroupBox Header="Граф:">
+                <StackPanel>
+                    <RadioButton GroupName="Graph" 
+                                 Content="ориентированный"
+                                 IsChecked="{Binding Oriented,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton GroupName="Graph" 
+                                 Content="неориентированный" 
+                                 />
+                </StackPanel>
+
+            </GroupBox>
+            <!--Панель режимов работы-->
+            <GroupBox Header="Режим работы:"
+                      Style="{StaticResource group}">
+                <StackPanel>
+                    <RadioButton GroupName="Work" 
+                                 Content="Добавление вершин" 
+                                 IsChecked="{Binding ModeAddVertex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    </RadioButton>
+                    <RadioButton GroupName="Work" 
+                                 Content="Удаление вершин" 
+                                 IsChecked="{Binding ModeDelete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    </RadioButton>
+                    <RadioButton GroupName="Work" 
+                                 Content="Добавление ребер" 
+                                 IsChecked="{Binding ModeAddEdge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    </RadioButton>
+                </StackPanel>
+            </GroupBox>
+            <!--Панель действий-->
+            <GroupBox Header="Панель действий:"
+                      Style="{StaticResource group}">
+                <StackPanel>
+                    <Button Content="Удалить вершины"
+                            ToolTip="Удаление выделенных вершин"
+                            Style="{StaticResource btn}"
+                            Command="{Binding DeleteVertexDelegateCommand}">
+                    </Button>
+                    <Button Content="Воссоздать рёбра"
+                            ToolTip="Воссоздать рисунок рёбер"
+                             Style="{StaticResource btn}"
+                            Command="{Binding RecreateEdgeDelegateCommand}">
+                    </Button>
+                    <Button Content="Очистить холст"
+                            ToolTip="Удалить все вершины и рёбра"
+                             Style="{StaticResource btn}"
+                            Command="{Binding ClearDelegateCommand}">
+                    </Button>
+                </StackPanel>
+            </GroupBox>
+            <!--Алгоритмы циклов-->
+            <GroupBox Header="Алгоритмы:"
+                      Style="{StaticResource group}">
+                <StackPanel>
+                    <Button Content="Сильно связные компоненты" 
+                            Style="{StaticResource btn}"
+                            ToolTip="Поиск сильно связной компоненты"
+                            Command="{Binding SCCDelegateCommand ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                    <Button Content="Алгоритм Флёри" 
+                            Style="{StaticResource btn}"
+                            ToolTip="Поиск эйлерова цикла"
+                            Command="{Binding FlueryDelegateCommand,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                </StackPanel>
+
+            </GroupBox>
+            <!--Алгоритмы поиска пути-->
+            <GroupBox Header="Алгоритмы поиска пути"
+                      Style="{StaticResource group}">
+                <StackPanel>
+
+                    <DockPanel LastChildFill="False">
+                        <TextBlock Text="Вершина начала поиска:" 
+                                   Margin="5"/>
+                        <TextBox MinWidth="25"
+                                 Height="25"
+                                 DockPanel.Dock="Right"
+                                 Text="{Binding FromNameVertex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+
+                    <DockPanel LastChildFill="False">
+                        <TextBlock Text="Вершина конца поиска:"
+                                   Margin="5"/>
+                        <TextBox MinWidth="25"
+                                 DockPanel.Dock="Right"
+                                 Height="25"
+                            Text="{Binding ToNameVertex,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch"/>
+                    </DockPanel>
+                   <!--BFS-->
+                    <Button Content="BFS" 
+                            ToolTip="Поиск в ширину"
+                             Style="{StaticResource btn}"
+                            Command="{Binding BFSDelegateCommand, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                    
+                    <!--BFS Matrix-->
+                    <Button Content="BFS in Matrix" 
+                            ToolTip="Поиск в ширину по матрице смежности"
+                            Style="{StaticResource btn}"
+                            Command="{Binding BFSMatrixDelegateCommand, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                    
+                    <!--DFS-->
+                    <Button Content="DFS"
+                            Style="{StaticResource btn}"
+                            ToolTip="Поиск в глубину"
+                            Command="{Binding DFSDelegateCommand, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                    
+                    <!--DFS Matrix-->
+                    <Button Content="DFS in Matrix"
+                            Style="{StaticResource btn}"
+                            ToolTip="Поиск в глубину по матрице смежности"
+                            Command="{Binding DFSMatrixDelegateCommand, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+
+                    </Button>
+                    
+                    <!--Вывод всех путей из вершины {X}-->
+                    <Button Content="Вывод всех путей" 
+                            Style="{StaticResource btn}"
+                            ToolTip="Вывод всех путей из вершины {X}"
+                            Command="{Binding AllWaysDelegateCommand, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                    
+                    <!--Вывод стоимости пути-->
+                    <Button Content="Стоимость путей" 
+                            ToolTip="Вывод стоимости путей"
+                            Style="{StaticResource btn}"
+                            Command="{Binding CostWaysDelegateCommand, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                    
+                    <!--Демонстрация скобочной структуры-->
+                    <Button Content="Cкобочная структура" 
+                            ToolTip="Демонстрация скобочной структуры"
+                            Style="{StaticResource btn}"
+                            Command="{Binding BraceStructDelegateCommand, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    </Button>
+                </StackPanel>
+            </GroupBox>
+           </StackPanel>
+        <!--Правое меню-->
+        <StackPanel DockPanel.Dock="Right"
+                    Margin="0,15,0,0"
+                    MaxWidth="200">
+            <!--Инструкция-->
+            <TextBlock TextWrapping="Wrap" 
+                       Margin="5">
+                <Run Text="Инструкция:"/>
+                <LineBreak/>
+                <Run Text="ЛКМ-левая кнопка мыши."/>
+                <LineBreak/>
+                <Run Text="В программе есть три режима:"/>
+                <LineBreak/>
+                <Run Text="1) Режим добавления вершин. Для добавления вершины необходимо нажать ЛКМ над тем местом,куда нужно добавить вершину."/>
+                <LineBreak/>
+                <Run Text="2) Режим удаления вершин. Для удаления вершин необходимо их выделить ЛКМ и нажать кнопку УДАЛИТЬ ВЕРШИНЫ."/>
+                <LineBreak/>
+                <Run Text="3) Режим добавления ребер. Чтобы создать между двумя вершинами ребро необходимо выделить ЛКМ сначала вершину от которой идёт ребро, а потом вершину куда идёт ребро."/>
+                <LineBreak/>
+                <LineBreak/>
+                <Run Text="Для выделения/снятия выделения с вершины ЛКМ."/>
+            </TextBlock>
+        </StackPanel>
+        <!--Нижняя панель-->
+        <StackPanel DockPanel.Dock="Bottom" Margin="10">
+            <!--Результат работы текстовых алгоритмов:-->
+            <TextBlock Text="Результат работы алгоритмов с выводом в ответ строки:"/>
+            <TextBox TextWrapping="Wrap"
+                     Height="80"
+                     MinWidth="100"
+                     Text="{Binding Result,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+
+            </TextBox>
+        </StackPanel>
+        <!--Центральный холст-->
+        <Grid Background="{StaticResource Base.Light }"
+              Margin="5,15,5,5">
+
+            <!--Панель ребер-->
+            <ItemsControl 
+                      ItemsSource="{Binding CollectionEdge, Mode=OneWay, IsAsync=True}"
+                      BorderBrush="White"                    
+                      BorderThickness="1,1,1,1" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+            </ItemsControl>
+
+            <ItemsControl x:Name="items"
+                      Background="Transparent" 
+                      ItemsSource="{Binding CollectionVertex, Mode=OneWay, IsAsync=True}" 
+                      BorderBrush="{StaticResource Base.Medium}"  
+                          
+                      BorderThickness="1,1,1,1" 
+                      MouseMove="Items_MouseMove">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.InputBindings>
+                    <MouseBinding Gesture="LeftClick" 
+                                  CommandParameter="{Binding Path=MousePoint, ElementName=main}"
+                                  Command="{Binding AddVertexDelegateCommand,UpdateSourceTrigger=PropertyChanged}">
+                    </MouseBinding>
+                </ItemsControl.InputBindings>
+
+            </ItemsControl>
+        </Grid>
+    </DockPanel>
+
+</Window>
