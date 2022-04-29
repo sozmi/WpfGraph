@@ -6,7 +6,7 @@ namespace Model
     /// <summary>
     /// Класс описывающий граф
     /// </summary>
-    public class Graph : GraphAlgorithms
+    public class Graph
     {
         private const string VERTEX_EQUAL = "Ошибка. Значения начальной вершины и конечной совпадают.";
 
@@ -40,7 +40,7 @@ namespace Model
         /// Определение является ли граф связным.
         /// Если граф - связный, то true, иначе false.
         /// </summary>
-        public bool IsConnected => CheckConnectivity(Vertexes);
+        public bool IsConnected => GraphAlg.CheckConnectivity(Vertexes);
 
         /// <summary>
         /// Определение является ли граф ориентированным.
@@ -76,6 +76,7 @@ namespace Model
         /// </summary>
         public Graph() { }
         #endregion
+
         #region Public Methods
         /// <summary>
         /// Добавление вершины с координатами p в конец списка смежности
@@ -135,10 +136,12 @@ namespace Model
         public int[] Fluery()
         {
             Validation();
+            if(IsOriented)
+                throw new GraphException("Ошибка. Алгоритм не может проверить является ли граф Эйлеровым для ориентированного графа.");
             if (!IsEuler)
                 throw new GraphException("Ошибка. Не удалось применить алгоритм. Граф не Эйлеров");
 
-            return Fleury(Vertexes);
+            return GraphAlg.Fleury(Vertexes);
         }
 
         /// <summary>
@@ -150,7 +153,7 @@ namespace Model
         public int[] BFS(int from, int to)
         {
             Validation();
-            return from == to ? throw new GraphException(VERTEX_EQUAL) : BFS(from, to, Vertexes);
+            return from == to ? throw new GraphException(VERTEX_EQUAL) : GraphAlg.BFS(from, to, Vertexes);
         }
 
         /// <summary>
@@ -163,7 +166,7 @@ namespace Model
         {
             Validation();
             if (from == to) throw new GraphException(VERTEX_EQUAL);
-            return DFS(from, to, Vertexes);
+            return GraphAlg.DFS(from, to, Vertexes);
         }
 
         /// <summary>
@@ -175,7 +178,7 @@ namespace Model
         public int[] MatrixDFS(int from, int to)
         {
             Validation();
-            return from == to ? throw new GraphException(VERTEX_EQUAL) : MatrixDFS(from, to, ToMatrix());
+            return from == to ? throw new GraphException(VERTEX_EQUAL) : GraphAlg.MatrixDFS(from, to, ToMatrix());
         }
 
         /// <summary>
@@ -187,7 +190,7 @@ namespace Model
         public int[] MatrixBFS(int from, int to)
         {
             Validation();
-            return from == to ? throw new GraphException(VERTEX_EQUAL) : MatrixBFS(from, to, ToMatrix());
+            return from == to ? throw new GraphException(VERTEX_EQUAL) : GraphAlg.MatrixBFS(from, to, ToMatrix());
         }
 
         /// <summary>
@@ -198,7 +201,7 @@ namespace Model
         public string AllWay(int index)
         {
             Validation();
-            return Dijkstra(index, ToMatrix(), Vertexes);
+            return GraphAlg.Dijkstra(index, ToMatrix(), Vertexes);
         }
 
         /// <summary>
@@ -207,7 +210,7 @@ namespace Model
         /// <returns>Строку с записанной матрицей</returns>
         public string CostWay()
         {
-            return FloydWarshall(ToMatrix(), Vertexes);
+            return GraphAlg.FloydWarshall(ToMatrix(), Vertexes);
         }
 
         /// <summary>
@@ -217,7 +220,7 @@ namespace Model
         public string BraceStruct()
         {
             Validation();
-            return BraceStruct(Vertexes, true);
+            return GraphAlg.BraceStruct(Vertexes, true);
         }
 
         /// <summary>
@@ -227,7 +230,7 @@ namespace Model
         public string SCC()
         {
             Validation();
-            return SCC(Vertexes);
+            return GraphAlg.SCC(Vertexes);
         }
 
         /// <summary>
@@ -239,6 +242,7 @@ namespace Model
             return OutputList(n ?? Vertexes);
         }
         #endregion
+
         #region Methods
         /// <summary>
         /// Преобразование списка смежности в матрицу смежности
@@ -250,7 +254,7 @@ namespace Model
             int[,] matrix = new int[N, N];
             for (int i = 0; i < N; i++)
             {
-                foreach (var v in Vertexes[i].Vertices)
+                foreach (Vertex v in Vertexes[i].Vertices)
                 {
                     matrix[i, v.Index] = 1;
                 }

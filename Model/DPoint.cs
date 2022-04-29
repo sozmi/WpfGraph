@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Model
+﻿namespace Model
 {
     public class DPoint
     {
@@ -12,5 +10,6 @@ namespace Model
 
         public double X { get; set; }
         public double Y { get; set; }
+
     }
 }

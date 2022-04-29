@@ -34,12 +34,14 @@ namespace WpfApp.ViewModels
         public static EdgeUC Edge(DPoint f, DPoint t, string i, bool oriented)
         {
             double xMin = Math.Min(t.X, f.X), yMin = Math.Min(t.Y, f.Y);
-            
+
             EdgeUC line = new()
             {
                 PathData = DrawLine(GetPoint(f, t), GetPoint(t, f), oriented),
                 Index = i,
-                MyMargin = new Thickness(xMin, yMin, 0, 0)
+                MyMargin = new Thickness(xMin, yMin, 0, 0),
+                MyCircle = f == t ? Visibility.Visible : Visibility.Collapsed,
+                Edge = f == t ? Visibility.Collapsed : Visibility.Visible
             };
             return line;
         }
@@ -76,6 +78,12 @@ namespace WpfApp.ViewModels
             return x > x2 ? -i : i;
         }
 
+        /// <summary>
+        /// Нарисовать наконечник
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         private static PolyLineSegment DrawArrow(Point a, Point b)
         {
             double HeadWidth = 10; // Ширина между ребрами стрелки
@@ -107,12 +115,18 @@ namespace WpfApp.ViewModels
 
             return arrow;
         }
-
+        /// <summary>
+        /// Рисование линии
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="oriented"></param>
+        /// <returns></returns>
         private static PathGeometry DrawLine(Point start, Point end, bool oriented)
         {
             PathFigure pathFigure = new()
             {
-                StartPoint = (System.Windows.Point)start,
+                StartPoint = start,
                 IsClosed = false
             };
             PathGeometry path = new();

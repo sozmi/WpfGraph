@@ -23,12 +23,25 @@ namespace WpfApp.View
             set => SetValue(PathDataProperty, value);
         }
 
-
         public static readonly DependencyProperty MyIndexProperty = DependencyProperty.Register(nameof(Index), typeof(string), typeof(EdgeUC));
         public string Index
         {
             get => (string)GetValue(MyIndexProperty);
             set => SetValue(MyIndexProperty, value);
+        }
+
+        public static readonly DependencyProperty CircleProperty = DependencyProperty.Register(nameof(MyCircle), typeof(Visibility), typeof(EdgeUC));
+        public Visibility MyCircle
+        {
+            get => (Visibility)GetValue(CircleProperty);
+            set => SetValue(CircleProperty, value);
+        }
+
+        public static readonly DependencyProperty EdgeProperty = DependencyProperty.Register(nameof(Edge), typeof(Visibility), typeof(EdgeUC));
+        public Visibility Edge
+        {
+            get => (Visibility)GetValue(EdgeProperty);
+            set => SetValue(EdgeProperty, value);
         }
 
         public static readonly DependencyProperty MyMarginProperty = DependencyProperty.Register(nameof(MyMargin), typeof(Thickness), typeof(EdgeUC));

@@ -12,16 +12,10 @@ namespace Model
         /// </summary>
         public int Index { get; set; }
 
-        public Vertex Parent { get; set; }
         /// <summary>
         /// Наименование текущей вершины
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        /// Координаты текущей вершины
-        /// </summary>
-        public DPoint Point { get; set; }
 
         /// <summary>
         /// Статус вершины.
@@ -34,6 +28,16 @@ namespace Model
         /// </summary>
         public List<Vertex> Vertices { get; } = new();
 
+
+        #endregion
+
+        #region Additional Property
+
+        /// <summary>
+        /// Координаты текущей вершины
+        /// </summary>
+        public DPoint Point { get; set; }
+
         /// <summary>
         /// Номер компоненты связности
         /// </summary>
@@ -44,6 +48,11 @@ namespace Model
         /// </summary>
         public int Depth { get; set; } = -1;
 
+
+        /// <summary>
+        /// Вспомогательное свойство для алгоритмов путей
+        /// </summary>
+        public Vertex Parent { get; set; }
         #endregion
 
         #region Constructor
@@ -58,6 +67,7 @@ namespace Model
             Name = GetName(ref id, false);
             Point = p;
         }
+
         /// <summary>
         /// Создание вершины
         /// </summary>
@@ -71,6 +81,7 @@ namespace Model
             Point = point;
             Status = status;
         }
+
         /// <summary>
         /// Создание вершины
         /// </summary>
@@ -111,6 +122,7 @@ namespace Model
                 res += (char)('A' + num);
             return res;
         }
+
         /// <summary>
         /// Создание клона вершины
         /// </summary>

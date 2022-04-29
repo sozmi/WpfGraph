@@ -3,23 +3,24 @@ using System.Collections.Generic;
 
 namespace Model
 {
-    public class GraphAlgorithms
+    /// <summary>
+    /// Класс алгоритмов работы с графом
+    /// </summary>
+    public static class GraphAlg
     {
-
-        #region Protected Methods
+        #region Public Methods
 
         /// <summary>
         /// Очередь для индексов
         /// </summary>
         private static readonly Queue<int> result = new();
 
-
         /// <summary>
         /// Алгоритм Флёри
         /// </summary>
         /// <param name="lst">Список смежности вершин</param>
         /// <returns>Список индексов вершин</returns>
-        protected static int[] Fleury(List<Vertex> lst)
+        public static int[] Fleury(List<Vertex> lst)
         {
             List<Vertex> v = Clone(ref lst);
             result.Clear();
@@ -33,7 +34,7 @@ namespace Model
         /// </summary>
         /// <param name="n">Список смежности графа</param>
         /// <returns>Если граф связный - true, иначе false</returns>
-        protected static bool CheckConnectivity(List<Vertex> n)
+        public static bool CheckConnectivity(List<Vertex> n)
         {
             VisitToFalse(ref n);
             Queue<Vertex> q = new();
@@ -67,7 +68,7 @@ namespace Model
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected static int[] BFS(int from, int to, List<Vertex> lst)
+        public static int[] BFS(int from, int to, List<Vertex> lst)
         {
             List<Vertex> v = Clone(ref lst);
             result.Clear();
@@ -82,7 +83,7 @@ namespace Model
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected static int[] MatrixBFS(int from, int to, int[,] matrix)
+        public static int[] MatrixBFS(int from, int to, int[,] matrix)
         {
             return BFS(from, to, ref matrix);
         }
@@ -94,7 +95,7 @@ namespace Model
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected static int[] DFS(int from, int to, List<Vertex> lst)
+        public static int[] DFS(int from, int to, List<Vertex> lst)
         {
             List<Vertex> v = Clone(ref lst);
             result.Clear();
@@ -109,7 +110,7 @@ namespace Model
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected static int[] MatrixDFS(int from, int to, int[,] matrix)
+        public static int[] MatrixDFS(int from, int to, int[,] matrix)
         {
             return DFS(from, to, ref matrix);
         }
@@ -117,7 +118,7 @@ namespace Model
         /// <summary>
         /// Нахождение и печать минимальных расстояний между вершинами по алгоритму Дейкстры
         /// </summary>
-        protected static string Dijkstra(int S, int[,] adj_matrix, List<Vertex> v)
+        public static string Dijkstra(int S, int[,] adj_matrix, List<Vertex> v)
         {
             int INF = int.MaxValue;
 
@@ -126,7 +127,7 @@ namespace Model
                 for (int j = 0; j < N; j++)
                     if (adj_matrix[i, j] == 0) adj_matrix[i, j] = INF;
 
-            // Console.WriteLine("КРАТЧАЙШЕЕ РАССТОЯНИЕ ОТ ВЕРШИНЫ ДО ОСТАЛЬНЫХ ВЕРШИН (АЛГОРИТМ ДЕЙКСТРЫ)");
+
             bool[] Visited = new bool[N]; //массив значений посетили ли вершину
             int[] Distance = new int[N]; //массив меток вершин
             for (int i = 0; i < N; ++i)
@@ -162,7 +163,7 @@ namespace Model
         /// <summary>
         /// Нахождение и печать минимальных расстояний между вершинами по алгоритму Флойда
         /// </summary>
-        protected static string FloydWarshall(int[,] matrix, List<Vertex> v)
+        public static string FloydWarshall(int[,] matrix, List<Vertex> v)
         {
             const int INF = 1000000;
             int N = v.Count;
@@ -188,7 +189,7 @@ namespace Model
             {
                 result += "\n" + v[i].Name;
                 for (int j = 0; j < N; ++j)
-                    result += "\t" + R[i, j];
+                    result += "\t" + (R[i, j] == INF ? 0 : R[i, j]);
             }
 
             return result;
@@ -197,7 +198,7 @@ namespace Model
         /// <summary>
         /// Демонстрация скобочной структуры
         /// </summary>
-        protected static string BraceStruct(List<Vertex> lst, bool Directed)
+        public static string BraceStruct(List<Vertex> lst, bool Directed)
         {
             string res = "Демонстрация скобочной структуры: Вершина(Время)\n";
 
@@ -262,7 +263,12 @@ namespace Model
             return res;
         }
 
-        protected static string SCC(List<Vertex> lst)
+        /// <summary>
+        /// Сильно связные компоненты
+        /// </summary>
+        /// <param name="lst"></param>
+        /// <returns></returns>
+        public static string SCC(List<Vertex> lst)
         {
             List<Vertex> v = Clone(ref lst);
 
@@ -300,6 +306,9 @@ namespace Model
         {
             int INF = int.MaxValue;
             int N = D.Length;
+            for (int i = 0; i < N; i++)
+                adj_matrix[i, i] = INF;
+
             string res = "Кратчайшие пути:\n";
             for (int i = 0; i < N; ++i)
                 if (D[i] > 0 && D[i] < INF)
@@ -572,6 +581,7 @@ namespace Model
             } while (v2 != v); //и делаем это до тех пор, пока (вершина которая была на верхушке дополнительного стека) НЕ РАВНА (рассматриваемой вершине)
             scnt++; //номер следующей компоненты
         }
+
         /// <summary>
         /// Поиск сильно связных компонент
         /// </summary>

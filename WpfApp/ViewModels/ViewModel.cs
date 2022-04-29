@@ -37,9 +37,11 @@ namespace WpfApp.ViewModels
             return false;
         }
         #endregion
+
         #region Constante
         private static readonly SolidColorBrush brushUsually = Brushes.Orange;
         #endregion
+
         #region Construction
         public ViewModel()
         {
@@ -86,7 +88,7 @@ namespace WpfApp.ViewModels
         /// Добавляет новую вершину на холст
         /// </summary>
         /// <param name="p">Координаты мышки в момент нажатия</param>
-        private void AddVertex(object p) 
+        private void AddVertex(object p)
         {
             Point pn = (Point)p;
             if (ModeAddVertex)
@@ -102,20 +104,19 @@ namespace WpfApp.ViewModels
         private void AddEdge()
         {
             int i0 = Indexs[0], i1 = Indexs[1];
-            if (Oriented)
+
+            if ((!Oriented && graph.AddEdge(i0, i1) && graph.AddEdge(i1, i0)) || (Oriented && graph.AddEdge(i0, i1)))//если такого ребра ещё нет
             {
-                if ((!Oriented && graph.AddEdge(i0, i1) && graph.AddEdge(i1, i0)) || (Oriented && graph.AddEdge(i0, i1)))//если такого ребра ещё нет
-                {
-                    EdgeUC edge = Draw.Edge(GetPoint(i0), GetPoint(i1), null, graph.IsOriented);
-                    CollectionEdge.Add(edge);
-                }
-                else
-                {
-                    _ = System.Windows.MessageBox.Show("Такое ребро уже существует.");
-                }
-                CollectionVertex[i0].MyColor = brushUsually;
-                CollectionVertex[i1].MyColor = brushUsually;
+                EdgeUC edge = Draw.Edge(GetPoint(i0), GetPoint(i1), null, graph.IsOriented);
+                CollectionEdge.Add(edge);
             }
+            else
+            {
+                _ = MessageBox.Show("Такое ребро уже существует.");
+            }
+            CollectionVertex[i0].MyColor = brushUsually;
+            CollectionVertex[i1].MyColor = brushUsually;
+
         }
 
         /// <summary>
@@ -175,7 +176,7 @@ namespace WpfApp.ViewModels
         private DPoint GetPoint(int index)
         {
             CollectionVertex[index].MyColor = brushUsually;
-           
+
             return graph.Vertexes[index].Point;
         }
 
@@ -186,25 +187,28 @@ namespace WpfApp.ViewModels
         {
             if (ModeAddEdge || ModeDelete)
             {
-                if (!Indexs.Remove(index))//если вершина уже была выделена, то она удалится и if не выполниться
+                if (ModeDelete)
                 {
-                    Indexs.Add(index);
-                    CollectionVertex[index].MyColor = Brushes.Red;
-                    if (ModeAddEdge)
+                    if (Indexs.Remove(index))
                     {
-                        if (Indexs.Count > 2)
-                        {
-                            _ = MessageBox.Show("Слишком много выделенных вершин. Невозможно создать ребро.");
-                        }
-                        else if (Indexs.Count == 2)
-                        {
-                            AddEdge();
-                            Indexs.Clear();
-                        }
+                        return;
                     }
-                    return;
                 }
-                CollectionVertex[index].MyColor = brushUsually;
+                Indexs.Add(index);
+                CollectionVertex[index].MyColor = Brushes.Red;
+                if (ModeAddEdge)
+                {
+                    if (Indexs.Count > 2)
+                    {
+                        _ = MessageBox.Show("Слишком много выделенных вершин. Невозможно создать ребро.");
+                    }
+                    else if (Indexs.Count == 2)
+                    {
+                        AddEdge();
+                        Indexs.Clear();
+                        CollectionVertex[index].MyColor = brushUsually;
+                    }
+                }
             }
             else
             {
@@ -363,7 +367,7 @@ namespace WpfApp.ViewModels
                 return;
             }
         }
-        
+
         /// <summary>
         /// Выводит сильно связные компоненты
         /// </summary>
